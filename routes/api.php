@@ -25,7 +25,7 @@ Route::group(['prefix' => 'link'], function () {
     Route::get('/', [LinksController::class, 'index']);
     Route::post('/', [LinksController::class, 'store']);
     Route::get('/{id}', [LinksController::class, 'show']);
-    Route::put('/{id}', [LinksController::class, 'update']);
+    Route::patch('/{id}', [LinksController::class, 'update']);
     Route::delete('/{id}', [LinksController::class, 'destroy']);
 });
 
@@ -34,6 +34,6 @@ Route::group(['prefix' => 'access-log-tracker'], function () {
     Route::get('/', [AccessLogTrackersController::class, 'index']);
     Route::post('/', [AccessLogTrackersController::class, 'store']);
     Route::get('/{id}', [AccessLogTrackersController::class, 'show']);
-    Route::put('/{id}', [AccessLogTrackersController::class, 'update']);
+    Route::patch('/{id}', [AccessLogTrackersController::class, 'update']);
     Route::delete('/{id}', [AccessLogTrackersController::class, 'destroy']);
 });
