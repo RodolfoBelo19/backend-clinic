@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+use function PHPUnit\Framework\isEmpty;
+
 class LinksController extends Controller
 {
     public function index()
@@ -70,36 +72,39 @@ class LinksController extends Controller
         if (!$link) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'link not found'
+                'message' => 'Link not found'
             ], 404);
         }
 
-        $url = $request->url;
-
-        $response = Http::post('https://api.encurtador.dev/encurtamentos', [
-            'url' => $url
-        ]);
-
-        $dataJson = $response->json();
-        $data = $dataJson['urlEncurtada'];
-        $link->slug = $request->slug;
-
-        if ($data) {
-            $link->url = $data;
-            $link->save();
-
-            return response()->json([
-                'link' => $data,
-                'status' => 'success',
-                'data' => $link
+        if ($request->filled('url')) {
+            $url = $request->input('url');
+            $response = Http::post('https://api.encurtador.dev/encurtamentos', [
+                'url' => $url
             ]);
-        } else {
-            return response()->json([
-                'link' => $data,
-                'status' => 'error',
-                'message' => 'Failed to shorten URL'
-            ], 500);
+
+            $dataJson = $response->json();
+
+            if (array_key_exists('urlEncurtada', $dataJson)) {
+                $data = $dataJson['urlEncurtada'];
+                $link->url = $data;
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to shorten URL'
+                ], 500);
+            }
         }
+
+        if ($request->filled('slug')) {
+            $link->slug = $request->input('slug');
+        }
+
+        $link->save();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $link
+        ]);
     }
 
     public function destroy($id)
