@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class LinksController extends Controller
 {
@@ -17,14 +18,32 @@ class LinksController extends Controller
     public function store(Request $request)
     {
         $link = new \App\Models\Link;
+        $url = $request->url;
         $link->slug = $request->slug;
-        $link->url = $request->url;
-        $link->save();
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $link
+        $response = Http::post('https://api.encurtador.dev/encurtamentos', [
+            'url' => $url
         ]);
+
+        $dataJson = $response->json();
+        $data = $dataJson['urlEncurtada'];
+
+        if ($data) {
+            $link->url = $data;
+            $link->save();
+
+            return response()->json([
+                'link' => $data,
+                'status' => 'success',
+                'data' => $link
+            ]);
+        } else {
+            return response()->json([
+                'link' => $data,
+                'status' => 'error',
+                'message' => 'Failed to shorten URL'
+            ], 500);
+        }
     }
 
     public function show($id)
@@ -55,14 +74,32 @@ class LinksController extends Controller
             ], 404);
         }
 
-        $link->slug = $request->slug;
-        $link->url = $request->url;
-        $link->save();
+        $url = $request->url;
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $link
+        $response = Http::post('https://api.encurtador.dev/encurtamentos', [
+            'url' => $url
         ]);
+
+        $dataJson = $response->json();
+        $data = $dataJson['urlEncurtada'];
+        $link->slug = $request->slug;
+
+        if ($data) {
+            $link->url = $data;
+            $link->save();
+
+            return response()->json([
+                'link' => $data,
+                'status' => 'success',
+                'data' => $link
+            ]);
+        } else {
+            return response()->json([
+                'link' => $data,
+                'status' => 'error',
+                'message' => 'Failed to shorten URL'
+            ], 500);
+        }
     }
 
     public function destroy($id)
