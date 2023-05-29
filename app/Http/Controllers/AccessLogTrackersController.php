@@ -20,6 +20,7 @@ class AccessLogTrackersController extends Controller
         $accessLogTracker->link_id = $request->link_id;
         $accessLogTracker->ip_address = $request->ip_address;
         $accessLogTracker->user_agent = $request->user_agent;
+        $accessLogTracker->count_access = 1;
         $accessLogTracker->save();
 
         return response()->json([
@@ -42,47 +43,6 @@ class AccessLogTrackersController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $accessLogTracker
-        ]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $accessLogTracker = \App\Models\AccessLogTracker::find($id);
-
-        if (!$accessLogTracker) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'access log tracker not found'
-            ], 404);
-        }
-
-        $accessLogTracker->link_id = $request->link_id;
-        $accessLogTracker->ip_address = $request->ip_address;
-        $accessLogTracker->user_agent = $request->user_agent;
-        $accessLogTracker->save();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $accessLogTracker
-        ]);
-    }
-
-    public function destroy($id)
-    {
-        $accessLogTracker = \App\Models\AccessLogTracker::find($id);
-
-        if (!$accessLogTracker) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'access log tracker not found'
-            ], 404);
-        }
-
-        $accessLogTracker->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'access log tracker deleted'
         ]);
     }
 }

@@ -118,6 +118,9 @@ class LinksController extends Controller
             ], 404);
         }
 
+        $accessLogTracker = \App\Models\AccessLogTracker::where('link_id', $id);
+        $accessLogTracker->delete();
+
         $link->delete();
 
         return response()->json([

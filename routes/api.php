@@ -34,6 +34,4 @@ Route::group(['prefix' => 'access-log-tracker'], function () {
     Route::get('/', [AccessLogTrackersController::class, 'index']);
     Route::post('/', [AccessLogTrackersController::class, 'store']);
     Route::get('/{id}', [AccessLogTrackersController::class, 'show']);
-    Route::patch('/{id}', [AccessLogTrackersController::class, 'update']);
-    Route::delete('/{id}', [AccessLogTrackersController::class, 'destroy']);
 });
