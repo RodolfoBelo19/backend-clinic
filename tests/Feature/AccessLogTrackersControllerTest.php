@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Link;
 use App\Models\AccessLogTracker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class AccessLogTrackersControllerTest extends TestCase
